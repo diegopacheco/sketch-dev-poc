@@ -24,6 +24,7 @@ PROS
  * There is a docker container. 
  * You can either use the console or the web interface.
  * Web interface allow you to run commands on the container fyle system.
+ * It works, I was able to give it tasks and get code done.
 
 CONS
  - Slow. Slower then all agents I tested. Claude code is faster than this. Opencode still the fastest.
