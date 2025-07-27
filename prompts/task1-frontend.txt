@@ -16,3 +16,5 @@ Do not call the backend, make React components, and reuse as much as possible.
 Do not use comments; make the code as simple as possible.
 
 the frontend code must be in a frontend/ folder
+
+COST: USD 2,34 (using Sketch)
