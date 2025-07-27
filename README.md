@@ -4,14 +4,24 @@ sketch-dev: Container Agent for development POC
 
 ## Sketch 
 
+Sketch web prompt interface <br/>
 <img src="results/sketch-in-action.png" width="600" height="400" />
+<br/>
+
+Sketch Git DIFF UI <br/>
+<img src="results/sketch-in-action-diff.png" width="600" height="400" />
+<br/>
+
+Sketch Terminal Interface <br/>
+<img src="results/sketch-in-action-terminal.png" width="600" height="400" />
+<br/>
 
 ## Sketch Dev - POC Experience Analysis / Trade-offs
 
 PROS
  * 25 USD as credit
  * Uses Claude Sonnet 4.0
- * There is a docker conainer. 
+ * There is a docker container. 
  * You can either use the console or the web interface.
  * Web interface allow you to run commands on the container fyle system.
 
