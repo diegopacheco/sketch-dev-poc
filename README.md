@@ -2,6 +2,10 @@
 
 sketch-dev: Container Agent for development POC
 
+## Sketch 
+
+<img src="results/sketch-in-action.png" width="600" height="400" />
+
 ## Sketch Dev - POC Experience Analysis / Trade-offs
 
 PROS
@@ -14,3 +18,5 @@ PROS
 CONS
  - Slow. Claude code is faster.
  - I had to build it, there is not a pre-built image for linux. 
+ - Browser tab sometimes closes out of the blue.
+ - When I try to push, I had to type my github credentials inside the docker container on the terminal but I could not type.
