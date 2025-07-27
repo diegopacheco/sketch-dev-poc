@@ -348,3 +348,11 @@ Let me know how I can help!
 ```
  - I had to create a token and paste on the web terminal (ugh so bad)
  - 
+
+### Related POCs
+
+* OpenAI Codex POC https://github.com/diegopacheco/codex-poc
+* Google Jules https://github.com/diegopacheco/google-jules-poc
+* Claude Code POC https://github.com/diegopacheco/claude-code-poc
+* Cursor POC https://github.com/diegopacheco/docker-cleanup
+* Gemini-cli POC: https://github.com/diegopacheco/gemini-cli-poc 
