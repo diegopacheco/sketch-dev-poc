@@ -1,0 +1,258 @@
+import React from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { AppProvider, useAppContext } from './context/AppContext';
+import AddTeamMember from './pages/AddTeamMember';
+import CreateTeam from './pages/CreateTeam';
+import AssignToTeam from './pages/AssignToTeam';
+import GiveFeedback from './pages/GiveFeedback';
+import Home from './pages/Home';
+
+global.alert = jest.fn();
+
+describe('Comprehensive Frontend Tests', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe('AppContext', () => {
+    const TestComponent = () => {
+      const { members, teams, feedback, addMember, addTeam, addFeedback, assignMemberToTeam } = useAppContext();
+      
+      return (
+        <div>
+          <div data-testid="member-count">{members.length}</div>
+          <div data-testid="team-count">{teams.length}</div>
+          <div data-testid="feedback-count">{feedback.length}</div>
+          <button onClick={() => addMember({ name: 'John', email: 'john@test.com', picture: '' })}>Add Member</button>
+          <button onClick={() => addTeam({ name: 'Dev Team', logo: '' })}>Add Team</button>
+          <button onClick={() => addFeedback({ content: 'Great!', targetType: 'member', targetId: '1', targetName: 'John' })}>Add Feedback</button>
+        </div>
+      );
+    };
+
+    it('should manage state correctly', async () => {
+      const user = userEvent.setup();
+      render(
+        <AppProvider>
+          <TestComponent />
+        </AppProvider>
+      );
+
+      expect(screen.getByTestId('member-count')).toHaveTextContent('0');
+      expect(screen.getByTestId('team-count')).toHaveTextContent('0');
+      expect(screen.getByTestId('feedback-count')).toHaveTextContent('0');
+
+      await user.click(screen.getByText('Add Member'));
+      expect(screen.getByTestId('member-count')).toHaveTextContent('1');
+
+      await user.click(screen.getByText('Add Team'));
+      expect(screen.getByTestId('team-count')).toHaveTextContent('1');
+
+      await user.click(screen.getByText('Add Feedback'));
+      expect(screen.getByTestId('feedback-count')).toHaveTextContent('1');
+    });
+  });
+
+  describe('AddTeamMember Page', () => {
+    const AddTeamMemberWithProvider = () => (
+      <AppProvider>
+        <AddTeamMember />
+      </AppProvider>
+    );
+
+    it('should render form fields', () => {
+      render(<AddTeamMemberWithProvider />);
+
+      expect(screen.getByText('Add Team Member')).toBeInTheDocument();
+      expect(screen.getByLabelText(/name/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/picture url/i)).toBeInTheDocument();
+    });
+
+    it('should add team member successfully', async () => {
+      const user = userEvent.setup();
+      render(<AddTeamMemberWithProvider />);
+
+      await user.type(screen.getByLabelText(/name/i), 'John Doe');
+      await user.type(screen.getByLabelText(/email/i), 'john@example.com');
+      await user.click(screen.getByRole('button', { name: /add team member/i }));
+
+      expect(global.alert).toHaveBeenCalledWith('Team member added successfully!');
+    });
+  });
+
+  describe('CreateTeam Page', () => {
+    const CreateTeamWithProvider = () => (
+      <AppProvider>
+        <CreateTeam />
+      </AppProvider>
+    );
+
+    it('should render form fields', () => {
+      render(<CreateTeamWithProvider />);
+
+      expect(screen.getByText('Create Team')).toBeInTheDocument();
+      expect(screen.getByLabelText(/team name/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/team logo url/i)).toBeInTheDocument();
+    });
+
+    it('should create team successfully', async () => {
+      const user = userEvent.setup();
+      render(<CreateTeamWithProvider />);
+
+      await user.type(screen.getByLabelText(/team name/i), 'Development Team');
+      await user.click(screen.getByRole('button', { name: /create team/i }));
+
+      expect(global.alert).toHaveBeenCalledWith('Team created successfully!');
+    });
+  });
+
+  describe('AssignToTeam Page', () => {
+    const AssignToTeamWithProvider = () => (
+      <AppProvider>
+        <AssignToTeam />
+      </AppProvider>
+    );
+
+    it('should render assignment interface', () => {
+      render(<AssignToTeamWithProvider />);
+
+      expect(screen.getByText('Assign to Team')).toBeInTheDocument();
+      expect(screen.getByText('Assign Member to Team')).toBeInTheDocument();
+      expect(screen.getByText('Current Team Assignments')).toBeInTheDocument();
+    });
+
+    it('should show empty states', () => {
+      render(<AssignToTeamWithProvider />);
+
+      expect(screen.getByText(/no members assigned to teams yet/i)).toBeInTheDocument();
+      expect(screen.getByText(/choose a member/i)).toBeInTheDocument();
+      expect(screen.getByText(/choose a team/i)).toBeInTheDocument();
+    });
+  });
+
+  describe('GiveFeedback Page', () => {
+    const GiveFeedbackWithProvider = () => (
+      <AppProvider>
+        <GiveFeedback />
+      </AppProvider>
+    );
+
+    it('should render feedback form', () => {
+      render(<GiveFeedbackWithProvider />);
+
+      expect(screen.getByText('Give Feedback')).toBeInTheDocument();
+      expect(screen.getByRole('radio', { name: /team member/i })).toBeInTheDocument();
+      expect(screen.getByRole('radio', { name: /team/i })).toBeInTheDocument();
+      expect(screen.getByRole('textbox', { name: /feedback content/i })).toBeInTheDocument();
+    });
+
+    it('should have team member selected by default', () => {
+      render(<GiveFeedbackWithProvider />);
+
+      expect(screen.getByRole('radio', { name: /team member/i })).toBeChecked();
+      expect(screen.getByRole('radio', { name: /team/i })).not.toBeChecked();
+    });
+
+    it('should show empty feedback state', () => {
+      render(<GiveFeedbackWithProvider />);
+
+      expect(screen.getByText(/no feedback submitted yet/i)).toBeInTheDocument();
+    });
+  });
+
+  describe('Home Page', () => {
+    const HomeWithProvider = () => (
+      <AppProvider>
+        <Home />
+      </AppProvider>
+    );
+
+    it('should render dashboard', () => {
+      render(<HomeWithProvider />);
+
+      expect(screen.getByText('Coaching Application Dashboard')).toBeInTheDocument();
+      expect(screen.getByText('Team Members')).toBeInTheDocument();
+      expect(screen.getByText('Teams')).toBeInTheDocument();
+      expect(screen.getByText('Feedback')).toBeInTheDocument();
+    });
+
+    it('should show initial counts as 0', () => {
+      render(<HomeWithProvider />);
+
+      const countElements = screen.getAllByText('0');
+      expect(countElements.length).toBeGreaterThanOrEqual(3);
+    });
+
+    it('should show empty state messages', () => {
+      render(<HomeWithProvider />);
+
+      expect(screen.getByText(/no teams created yet/i)).toBeInTheDocument();
+      expect(screen.getByText(/no members added yet/i)).toBeInTheDocument();
+    });
+  });
+
+  describe('Form Validation', () => {
+    it('should validate required fields in AddTeamMember', async () => {
+      const user = userEvent.setup();
+      render(
+        <AppProvider>
+          <AddTeamMember />
+        </AppProvider>
+      );
+
+      await user.click(screen.getByRole('button', { name: /add team member/i }));
+      expect(global.alert).not.toHaveBeenCalled();
+    });
+
+    it('should validate required fields in CreateTeam', async () => {
+      const user = userEvent.setup();
+      render(
+        <AppProvider>
+          <CreateTeam />
+        </AppProvider>
+      );
+
+      await user.click(screen.getByRole('button', { name: /create team/i }));
+      expect(global.alert).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Form Clearing', () => {
+    it('should clear AddTeamMember form after submission', async () => {
+      const user = userEvent.setup();
+      render(
+        <AppProvider>
+          <AddTeamMember />
+        </AppProvider>
+      );
+
+      const nameInput = screen.getByLabelText(/name/i) as HTMLInputElement;
+      const emailInput = screen.getByLabelText(/email/i) as HTMLInputElement;
+
+      await user.type(nameInput, 'John Doe');
+      await user.type(emailInput, 'john@example.com');
+      await user.click(screen.getByRole('button', { name: /add team member/i }));
+
+      expect(nameInput.value).toBe('');
+      expect(emailInput.value).toBe('');
+    });
+
+    it('should clear CreateTeam form after submission', async () => {
+      const user = userEvent.setup();
+      render(
+        <AppProvider>
+          <CreateTeam />
+        </AppProvider>
+      );
+
+      const nameInput = screen.getByLabelText(/team name/i) as HTMLInputElement;
+
+      await user.type(nameInput, 'Development Team');
+      await user.click(screen.getByRole('button', { name: /create team/i }));
+
+      expect(nameInput.value).toBe('');
+    });
+  });
+});
