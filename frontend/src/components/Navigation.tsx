@@ -20,9 +20,9 @@ const Navigation: React.FC = () => {
         marginRight: '1rem'
       }}>
         <img 
-          src="/logo-app.svg" 
+          src="/logo-app.png" 
           alt="Coaching App" 
-          style={{ height: '32px' }}
+          style={{ height: '32px', width: '32px', objectFit: 'contain' }}
         />
       </Link>
       
