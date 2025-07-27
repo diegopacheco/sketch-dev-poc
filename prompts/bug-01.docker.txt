@@ -68,3 +68,5 @@ Bug 01: create a branch and fix this bug in the end push to upstream
  ✘ Container coaching-backend   Error                                                                                                                               0.0s 
  ✔ Container coaching-frontend  Created                                                                                                                             0.1s 
 dependency failed to start: container coaching-backend is unhealthy
+
+COST USD 1,35 (using Sketch)
