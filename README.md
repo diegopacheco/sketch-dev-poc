@@ -370,7 +370,9 @@ CONS
 Let me know how I can help!
 ```
  - I had to create a token and paste on the web terminal (ugh so bad)
- - 
+ - I had to fix bugs myself because the agent env was all good but in my machine was not working, clearly the agent had some cache issue.
+ - It took me hours to make this app work ~3h more or less (much more than other agent tools).
+ - Started the POC with $ 25 USD and end with Current balance: $6.21
 
 ### ALL PRs can be found here:
 
