@@ -43,7 +43,10 @@ const FeedbackList: React.FC = () => {
 
   return (
     <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '2rem' }}>
-      <h2>All Feedback</h2>
+      <h2>Feedback Overview</h2>
+      <p style={{ color: '#666', marginBottom: '2rem' }}>
+        View and filter all feedback by team members or teams. Use the filters below to find specific feedback.
+      </p>
       
       <div style={{ 
         display: 'flex', 
@@ -119,10 +122,21 @@ const FeedbackList: React.FC = () => {
         </div>
       </div>
 
-      <div style={{ marginBottom: '1rem' }}>
+      <div style={{ marginBottom: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <p style={{ color: '#666', fontSize: '0.9rem' }}>
           Showing {filteredFeedback.length} of {feedback.length} feedback entries
         </p>
+        {filterType !== 'all' || selectedTarget ? (
+          <span style={{ 
+            fontSize: '0.8rem', 
+            color: '#007bff', 
+            backgroundColor: '#e7f3ff', 
+            padding: '0.25rem 0.5rem', 
+            borderRadius: '12px' 
+          }}>
+            Filtered View
+          </span>
+        ) : null}
       </div>
 
       {filteredFeedback.length === 0 ? (
