@@ -7,14 +7,13 @@ const AddTeamMember: React.FC = () => {
   const [email, setEmail] = useState('');
   const [picture, setPicture] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (name && email) {
-      addMember({ name, email, picture });
+      await addMember({ name, email, picture });
       setName('');
       setEmail('');
       setPicture('');
-      alert('Team member added successfully!');
     }
   };
 

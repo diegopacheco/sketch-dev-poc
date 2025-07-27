@@ -7,24 +7,16 @@ const GiveFeedback: React.FC = () => {
   const [targetId, setTargetId] = useState('');
   const [content, setContent] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (targetId && content) {
-      const target = targetType === 'team' 
-        ? teams.find(t => t.id === targetId)
-        : members.find(m => m.id === targetId);
-      
-      if (target) {
-        addFeedback({
-          content,
-          targetType,
-          targetId,
-          targetName: target.name
-        });
-        setContent('');
-        setTargetId('');
-        alert('Feedback submitted successfully!');
-      }
+      await addFeedback({
+        content,
+        target_type: targetType,
+        target_id: parseInt(targetId)
+      });
+      setContent('');
+      setTargetId('');
     }
   };
 
@@ -84,7 +76,7 @@ const GiveFeedback: React.FC = () => {
             >
               <option value="">Choose a {targetType}...</option>
               {targets.map(target => (
-                <option key={target.id} value={target.id}>{target.name}</option>
+                <option key={target.id} value={target.id.toString()}>{target.name}</option>
               ))}
             </select>
           </div>
@@ -141,11 +133,11 @@ const GiveFeedback: React.FC = () => {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                   <div>
                     <strong style={{ color: '#007bff' }}>
-                      {fb.targetType === 'team' ? 'Team' : 'Member'}: {fb.targetName}
+                      {fb.target_type === 'team' ? 'Team' : 'Member'}: {fb.target_name}
                     </strong>
                   </div>
                   <small style={{ color: '#666' }}>
-                    {fb.createdAt.toLocaleDateString()} {fb.createdAt.toLocaleTimeString()}
+                    {new Date(fb.created_at).toLocaleDateString()} {new Date(fb.created_at).toLocaleTimeString()}
                   </small>
                 </div>
                 <p style={{ margin: 0, lineHeight: '1.5' }}>{fb.content}</p>

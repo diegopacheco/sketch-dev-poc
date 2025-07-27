@@ -6,13 +6,12 @@ const CreateTeam: React.FC = () => {
   const [name, setName] = useState('');
   const [logo, setLogo] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (name) {
-      addTeam({ name, logo });
+      await addTeam({ name, logo });
       setName('');
       setLogo('');
-      alert('Team created successfully!');
     }
   };
 

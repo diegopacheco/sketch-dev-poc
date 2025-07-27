@@ -26,13 +26,12 @@ describe('Comprehensive Frontend Tests', () => {
           <div data-testid="feedback-count">{feedback.length}</div>
           <button onClick={() => addMember({ name: 'John', email: 'john@test.com', picture: '' })}>Add Member</button>
           <button onClick={() => addTeam({ name: 'Dev Team', logo: '' })}>Add Team</button>
-          <button onClick={() => addFeedback({ content: 'Great!', targetType: 'member', targetId: '1', targetName: 'John' })}>Add Feedback</button>
+          <button onClick={() => addFeedback({ content: 'Great!', target_type: 'member', target_id: 1 })}>Add Feedback</button>
         </div>
       );
     };
 
     it('should manage state correctly', async () => {
-      const user = userEvent.setup();
       render(
         <AppProvider>
           <TestComponent />
@@ -43,13 +42,13 @@ describe('Comprehensive Frontend Tests', () => {
       expect(screen.getByTestId('team-count')).toHaveTextContent('0');
       expect(screen.getByTestId('feedback-count')).toHaveTextContent('0');
 
-      await user.click(screen.getByText('Add Member'));
+      userEvent.click(screen.getByText('Add Member'));
       expect(screen.getByTestId('member-count')).toHaveTextContent('1');
 
-      await user.click(screen.getByText('Add Team'));
+      userEvent.click(screen.getByText('Add Team'));
       expect(screen.getByTestId('team-count')).toHaveTextContent('1');
 
-      await user.click(screen.getByText('Add Feedback'));
+      userEvent.click(screen.getByText('Add Feedback'));
       expect(screen.getByTestId('feedback-count')).toHaveTextContent('1');
     });
   });

@@ -6,23 +6,21 @@ const AssignToTeam: React.FC = () => {
   const [selectedMember, setSelectedMember] = useState('');
   const [selectedTeam, setSelectedTeam] = useState('');
 
-  const handleAssign = (e: React.FormEvent) => {
+  const handleAssign = async (e: React.FormEvent) => {
     e.preventDefault();
     if (selectedMember && selectedTeam) {
-      assignMemberToTeam(selectedMember, selectedTeam);
+      await assignMemberToTeam(selectedMember, selectedTeam);
       setSelectedMember('');
       setSelectedTeam('');
-      alert('Member assigned to team successfully!');
     }
   };
 
-  const handleRemove = (memberId: string) => {
-    removeMemberFromTeam(memberId);
-    alert('Member removed from team successfully!');
+  const handleRemove = async (memberId: string) => {
+    await removeMemberFromTeam(memberId);
   };
 
-  const unassignedMembers = members.filter(member => !member.teamId);
-  const assignedMembers = members.filter(member => member.teamId);
+  const unassignedMembers = members.filter(member => !member.team_id);
+  const assignedMembers = members.filter(member => member.team_id);
 
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto', padding: '2rem' }}>
@@ -47,7 +45,7 @@ const AssignToTeam: React.FC = () => {
             >
               <option value="">Choose a member...</option>
               {unassignedMembers.map(member => (
-                <option key={member.id} value={member.id}>{member.name}</option>
+                <option key={member.id} value={member.id.toString()}>{member.name}</option>
               ))}
             </select>
           </div>
@@ -67,7 +65,7 @@ const AssignToTeam: React.FC = () => {
             >
               <option value="">Choose a team...</option>
               {teams.map(team => (
-                <option key={team.id} value={team.id}>{team.name}</option>
+                <option key={team.id} value={team.id.toString()}>{team.name}</option>
               ))}
             </select>
           </div>
@@ -95,7 +93,7 @@ const AssignToTeam: React.FC = () => {
         ) : (
           <div style={{ display: 'grid', gap: '1rem' }}>
             {assignedMembers.map(member => {
-              const team = teams.find(t => t.id === member.teamId);
+              const team = teams.find(t => t.id === member.team_id);
               return (
                 <div key={member.id} style={{
                   display: 'flex',
@@ -121,7 +119,7 @@ const AssignToTeam: React.FC = () => {
                     </div>
                   </div>
                   <button
-                    onClick={() => handleRemove(member.id)}
+                    onClick={() => handleRemove(member.id.toString())}
                     style={{
                       padding: '0.5rem 1rem',
                       backgroundColor: '#dc3545',
