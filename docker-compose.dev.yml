@@ -1,0 +1,30 @@
+version: '3.8'
+
+# Development override for docker-compose.yml
+# Use with: docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+services:
+  mysql:
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: coaching_db
+      MYSQL_USER: coaching_user
+      MYSQL_PASSWORD: coaching_password
+    command: --init-file /docker-entrypoint-initdb.d/schema.sql
+
+  backend:
+    environment:
+      - GIN_MODE=debug
+      - DATABASE_URL=coaching_user:coaching_password@tcp(mysql:3306)/coaching_db?charset=utf8mb4&parseTime=True&loc=Local
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8080:8080"
+
+  frontend:
+    environment:
+      - NODE_ENV=development
+    ports:
+      - "3000:3000"

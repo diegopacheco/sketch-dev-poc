@@ -14,7 +14,8 @@ var DB *gorm.DB
 func Connect() {
 	dsn := os.Getenv("DATABASE_URL")
 	if dsn == "" {
-		dsn = "root:password@tcp(localhost:3306)/coaching_db?charset=utf8mb4&parseTime=True&loc=Local"
+		// Default for Docker Compose environment
+		dsn = "coaching_user:coaching_password@tcp(mysql:3306)/coaching_db?charset=utf8mb4&parseTime=True&loc=Local"
 	}
 
 	var err error

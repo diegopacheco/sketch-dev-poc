@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  # MySQL 9 Database
+  mysql:
+    image: mysql:9.0
+    container_name: coaching-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: coaching_db
+      MYSQL_USER: coaching_user
+      MYSQL_PASSWORD: coaching_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db/mysql_data:/var/lib/mysql
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    networks:
+      - coaching-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      timeout: 5s
+      retries: 10
+      interval: 10s
+      start_period: 30s
+
+  # Go Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: coaching-backend
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=coaching_user:coaching_password@tcp(mysql:3306)/coaching_db?charset=utf8mb4&parseTime=True&loc=Local
+      - PORT=8080
+      - GIN_MODE=release
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - coaching-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
+      timeout: 5s
+      retries: 5
+      interval: 10s
+      start_period: 30s
+
+  # React Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: coaching-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - coaching-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]
+      timeout: 5s
+      retries: 5
+      interval: 10s
+      start_period: 30s
+
+networks:
+  coaching-network:
+    driver: bridge
+    name: coaching-network
+
+volumes:
+  mysql_data:
+    driver: local
