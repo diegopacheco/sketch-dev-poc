@@ -4,6 +4,7 @@ import (
 	"coaching-backend/models"
 	"log"
 	"os"
+	"time"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -18,10 +19,22 @@ func Connect() {
 		dsn = "coaching_user:coaching_password@tcp(mysql:3306)/coaching_db?charset=utf8mb4&parseTime=True&loc=Local"
 	}
 
+	// Retry connection with backoff
 	var err error
-	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	maxRetries := 30
+	for i := 0; i < maxRetries; i++ {
+		DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+		if err == nil {
+			break
+		}
+		log.Printf("Failed to connect to database (attempt %d/%d): %v", i+1, maxRetries, err)
+		if i < maxRetries-1 {
+			time.Sleep(time.Duration(i+1) * time.Second)
+		}
+	}
+	
 	if err != nil {
-		log.Fatal("Failed to connect to database:", err)
+		log.Fatal("Failed to connect to database after retries:", err)
 	}
 
 	err = DB.AutoMigrate(&models.TeamMember{}, &models.Team{}, &models.Feedback{})
