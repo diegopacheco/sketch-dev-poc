@@ -68,8 +68,8 @@ INSERT IGNORE INTO feedback (content, target_type, target_id, target_name) VALUE
     ('Creative and innovative design solutions.', 'team', 2, 'Design Team');
 
 -- Create indexes for performance
-CREATE INDEX IF NOT EXISTS idx_team_members_created_at ON team_members(created_at);
-CREATE INDEX IF NOT EXISTS idx_teams_created_at ON teams(created_at);
+CREATE INDEX idx_team_members_created_at ON team_members(created_at);
+CREATE INDEX idx_teams_created_at ON teams(created_at);
 
 -- Show table information
 SHOW TABLES;
