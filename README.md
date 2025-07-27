@@ -16,7 +16,7 @@ PROS
  * Web interface allow you to run commands on the container fyle system.
 
 CONS
- - Slow. Claude code is faster.
+ - Slow. Slower then all agents I tested. Claude code is faster than this. Opencode still the fastest.
  - I had to build it, there is not a pre-built image for linux. 
  - Browser tab sometimes closes out of the blue.
  - When I try to push, I had to type my github credentials inside the docker container on the terminal but I could not type.
