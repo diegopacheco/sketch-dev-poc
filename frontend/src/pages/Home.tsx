@@ -3,9 +3,18 @@ import { useAppContext } from '../context/AppContext';
 import { Link } from 'react-router-dom';
 
 const Home: React.FC = () => {
-  const { members, teams, feedback } = useAppContext();
+  const { members, teams, feedback, loading } = useAppContext();
 
-  const unassignedMembers = members.filter(member => !member.teamId);
+  if (loading) {
+    return (
+      <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '2rem', textAlign: 'center' }}>
+        <h1>Loading...</h1>
+        <p>Loading coaching application data...</p>
+      </div>
+    );
+  }
+
+  const unassignedMembers = members.filter(member => !member.team_id);
 
   return (
     <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '2rem' }}>
@@ -42,7 +51,7 @@ const Home: React.FC = () => {
           ) : (
             <div style={{ display: 'grid', gap: '1rem' }}>
               {teams.map(team => {
-                const teamMembers = members.filter(member => member.teamId === team.id);
+                const teamMembers = members.filter(member => member.team_id === team.id);
                 return (
                   <div key={team.id} style={{
                     padding: '1rem',
@@ -77,7 +86,7 @@ const Home: React.FC = () => {
           ) : (
             <div style={{ display: 'grid', gap: '1rem' }}>
               {members.slice(-5).reverse().map(member => {
-                const team = teams.find(t => t.id === member.teamId);
+                const team = teams.find(t => t.id === member.team_id);
                 return (
                   <div key={member.id} style={{
                     display: 'flex',
