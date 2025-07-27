@@ -349,6 +349,10 @@ Let me know how I can help!
  - I had to create a token and paste on the web terminal (ugh so bad)
  - 
 
+### ALL PRs can be found here:
+
+https://github.com/diegopacheco/sketch-dev-poc/pulls?q=is%3Apr+is%3Aclosed
+
 ### Related POCs
 
 * OpenAI Codex POC https://github.com/diegopacheco/codex-poc
